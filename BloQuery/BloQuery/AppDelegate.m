@@ -1,12 +1,5 @@
-//
-//  AppDelegate.m
-//  BloQuery
-//
-//  Created by Hermes on 11/16/15.
-//  Copyright © 2015 Hermes Alvarez. All rights reserved.
-//
-
 #import "AppDelegate.h"
+#import <Parse/Parse.h>
 
 @interface AppDelegate ()
 
@@ -16,7 +9,11 @@
 
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
-    // Override point for customization after application launch.
+    
+    // Initialize Parse.
+    [Parse setApplicationId:@"PnM5NfN25bMwjuQlE0EnrXMNJzcgrVJ93XNfywx5"
+                  clientKey:@"pYFKBTTJTlhh48Gfr7yqln5IExxB8he9FKIBzhZX"];
+    
     return YES;
 }
 
