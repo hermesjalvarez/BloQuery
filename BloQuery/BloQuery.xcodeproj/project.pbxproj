@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A18142BF1BFD81DF003EDC5C /* QuestionsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A18142BE1BFD81DF003EDC5C /* QuestionsTableViewCell.m */; };
+		A18142C21BFE98F8003EDC5C /* AnswersTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A18142C11BFE98F8003EDC5C /* AnswersTableViewCell.m */; };
 		A1A9AF721BFAA3E300961B99 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A9AF711BFAA3E300961B99 /* main.m */; };
 		A1A9AF751BFAA3E300961B99 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A9AF741BFAA3E300961B99 /* AppDelegate.m */; };
 		A1A9AF7B1BFAA3E300961B99 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1A9AF791BFAA3E300961B99 /* Main.storyboard */; };
@@ -40,6 +42,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A18142BD1BFD81DF003EDC5C /* QuestionsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionsTableViewCell.h; sourceTree = "<group>"; };
+		A18142BE1BFD81DF003EDC5C /* QuestionsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionsTableViewCell.m; sourceTree = "<group>"; };
+		A18142C01BFE98F8003EDC5C /* AnswersTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswersTableViewCell.h; sourceTree = "<group>"; };
+		A18142C11BFE98F8003EDC5C /* AnswersTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AnswersTableViewCell.m; sourceTree = "<group>"; };
 		A1A9AF6D1BFAA3E300961B99 /* BloQuery.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BloQuery.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A1A9AF711BFAA3E300961B99 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		A1A9AF731BFAA3E300961B99 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -140,10 +146,14 @@
 				A1A9AF8E1BFAAD2700961B99 /* SignUpViewController.m */,
 				A1A9AF871BFAA6CE00961B99 /* QuestionsViewTableViewController.h */,
 				A1A9AF881BFAA6CE00961B99 /* QuestionsViewTableViewController.m */,
+				A18142BD1BFD81DF003EDC5C /* QuestionsTableViewCell.h */,
+				A18142BE1BFD81DF003EDC5C /* QuestionsTableViewCell.m */,
 				A1A9AFB71BFAD09B00961B99 /* AskQuestionViewController.h */,
 				A1A9AFB81BFAD09B00961B99 /* AskQuestionViewController.m */,
 				A1A9AFBA1BFBF8D100961B99 /* AnswersTableViewController.h */,
 				A1A9AFBB1BFBF8D100961B99 /* AnswersTableViewController.m */,
+				A18142C01BFE98F8003EDC5C /* AnswersTableViewCell.h */,
+				A18142C11BFE98F8003EDC5C /* AnswersTableViewCell.m */,
 				A1A9AFBD1BFC070D00961B99 /* AnswerQuestionViewController.h */,
 				A1A9AFBE1BFC070D00961B99 /* AnswerQuestionViewController.m */,
 				A1A9AF701BFAA3E300961B99 /* Supporting Files */,
@@ -261,6 +271,8 @@
 			files = (
 				A1A9AFBF1BFC070D00961B99 /* AnswerQuestionViewController.m in Sources */,
 				A1A9AF8C1BFAAD0700961B99 /* SignInViewController.m in Sources */,
+				A18142BF1BFD81DF003EDC5C /* QuestionsTableViewCell.m in Sources */,
+				A18142C21BFE98F8003EDC5C /* AnswersTableViewCell.m in Sources */,
 				A1A9AF8F1BFAAD2700961B99 /* SignUpViewController.m in Sources */,
 				A1A9AF751BFAA3E300961B99 /* AppDelegate.m in Sources */,
 				A1A9AF891BFAA6CE00961B99 /* QuestionsViewTableViewController.m in Sources */,
@@ -421,6 +433,7 @@
 				A1A9AF861BFAA3E300961B99 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

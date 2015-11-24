@@ -1,6 +1,7 @@
 #import "QuestionsViewTableViewController.h"
 #import <Parse/Parse.h>
 #import "AnswersTableViewController.h"
+#import "QuestionsTableViewCell.h"
 
 @interface QuestionsViewTableViewController ()
 
@@ -28,7 +29,30 @@
         }
         
         dispatch_async(dispatch_get_main_queue(), ^{
+            
+            self.questionsAnswerCount = [[NSMutableArray alloc] init];
+            
+            for (NSString *questionID in self.questionsID) {
+                
+                PFQuery *query = [PFQuery queryWithClassName:@"Answers"];
+                [query whereKey:@"questionAskedID" equalTo:questionID];
+                [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
+                    if (!error) {
+                    } else {
+                    }
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        NSLog(@"%@ %d", questionID ,count);
+                        NSString *countString = [NSString stringWithFormat:@"%d",count];
+                        [self.questionsAnswerCount addObject:countString];
+                        [self.tableView reloadData];
+                        //NSLog(@"%@",self.questionsAnswerCount);
+                    });
+                }];
+                
+            }
+            
             [self.tableView reloadData];
+            
         });
     }];
     
@@ -47,15 +71,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     static NSString *identifier = @"Cell";
     
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier];
-    
-    if (!cell) {
-        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:identifier];
-    }
+    QuestionsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     NSString *currentValue = [self.questions objectAtIndex:[indexPath row]];
     
-    [[cell textLabel] setText:currentValue];
+    cell.questionLabel.text = currentValue;
+    cell.questionCountLabel.text = @"11";
     
     return cell;
 }

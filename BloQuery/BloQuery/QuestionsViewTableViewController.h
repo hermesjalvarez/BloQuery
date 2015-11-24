@@ -4,6 +4,7 @@
 
 @property(nonatomic,strong) NSMutableArray *questions;
 @property(nonatomic,strong) NSMutableArray *questionsID;
+@property(nonatomic,strong) NSMutableArray *questionsAnswerCount;
 
 - (IBAction)SignOut:(id)sender;
 

@@ -43,6 +43,8 @@
         Answer[@"username"] = currentUser.username;
         Answer[@"questionAskedID"] = self.questionAskedID;
         Answer[@"questionAsked"] = self.questionAsked; //not needed in DB, can use ID to find it
+        Answer[@"upvotes"] = @0;
+        Answer[@"upvoters"] = [[NSMutableArray alloc] init];
         
         [Answer saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
             if (error) {
@@ -62,6 +64,27 @@
                 
                 [self presentViewController:alert animated:YES completion:nil];
             } else {
+                
+                //test
+                
+//                PFQuery *query = [PFQuery queryWithClassName:@"Question"];
+//                [query whereKey:@"objectId" equalTo:self.questionAskedID];
+//                [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+//                    if (!error) {
+//                        for (PFObject *object in objects) {
+//                            [self.questions addObject:object[@"question"]];
+//                        }
+//                    } else {
+//                        NSLog(@"Error: %@ %@", error, [error userInfo]);
+//                    }
+//                    
+//                    }];
+                
+                
+                
+                // test
+                
+                
                 [self performSegueWithIdentifier:@"backtoAnswersTableView" sender:self];
             }
         }];
