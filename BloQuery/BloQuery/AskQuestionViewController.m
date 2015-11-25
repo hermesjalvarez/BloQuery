@@ -39,6 +39,7 @@
         PFObject *Question = [PFObject objectWithClassName:@"Question"];
         Question[@"username"] = currentUser.username;
         Question[@"question"] = question;
+        Question[@"answers"] = @0;
         
         [Question saveInBackgroundWithBlock:^(BOOL succeeded, NSError *error){
             if (error) {
@@ -57,6 +58,7 @@
                 [alert addAction:okButton];
                 
                 [self presentViewController:alert animated:YES completion:nil];
+            
             } else {
                 [self performSegueWithIdentifier:@"backToQuestions" sender:self];
             }

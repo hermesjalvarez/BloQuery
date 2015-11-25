@@ -7,10 +7,9 @@
 
 @implementation AppDelegate
 
-
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     
-    // Initialize Parse.
+    // Initialize Parse
     [Parse setApplicationId:@"PnM5NfN25bMwjuQlE0EnrXMNJzcgrVJ93XNfywx5"
                   clientKey:@"pYFKBTTJTlhh48Gfr7yqln5IExxB8he9FKIBzhZX"];
     

@@ -48,14 +48,6 @@
 
 - (IBAction)upvoteButtonPressed:(id)sender {
     
-//    static NSString *identifier = @"Cell";
-//    CGPoint buttonPosition = [sender convertPoint:CGPointZero
-//                                           toView:self.tableView];
-//    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
-//    AnswersTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-//    NSNumber *currentAnswersUpvotesValue = [self.answersUpvotes objectAtIndex:[indexPath row]];
-//    NSLog(@"current value:%@",currentAnswersUpvotesValue);
-    
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"objectId" equalTo:[self.answersID objectAtIndex:[sender tag]]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
