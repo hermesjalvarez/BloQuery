@@ -17,7 +17,9 @@
     self.questionsID = [[NSMutableArray alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Question"];
+    [query orderByDescending:@"createdAt"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        
         if (!error) {
             for (PFObject *object in objects) {
                 [self.questions addObject:object[@"question"]];
@@ -30,32 +32,37 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
+            NSLog(@"%@ %@",self.questions,self.questionsID);
+            
             self.questionsAnswerCount = [[NSMutableArray alloc] init];
+            
+            __block NSInteger counter = 0;
             
             for (NSString *questionID in self.questionsID) {
                 
-                PFQuery *query = [PFQuery queryWithClassName:@"Answers"];
-                [query whereKey:@"questionAskedID" equalTo:questionID];
+                PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
+                [query orderByDescending:@"createdAt"];
+                [query whereKey:@"questionAskedID" equalTo:[NSString stringWithFormat:@"%@",questionID]];
                 [query countObjectsInBackgroundWithBlock:^(int count, NSError *error) {
                     if (!error) {
+                        [self.questionsAnswerCount addObject:[NSString stringWithFormat:@"%d",count]];
                     } else {
                     }
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        NSLog(@"%@ %d", questionID ,count);
-                        NSString *countString = [NSString stringWithFormat:@"%d",count];
-                        [self.questionsAnswerCount addObject:countString];
-                        [self.tableView reloadData];
-                        //NSLog(@"%@",self.questionsAnswerCount);
+                        NSLog(@"properQuestionID:%@",[NSString stringWithFormat:@"%@",[self.questionsID objectAtIndex:counter]]);
+                        NSLog(@"questionIDused:%@ counter:%ld current:%@ total:%lu",questionID, (long)counter,self.questionsAnswerCount, (unsigned long)self.questionsID.count);
+                        if (counter==self.questionsID.count-1) {
+                            NSLog(@"final counter:%ld final:%@",(long)counter, self.questionsAnswerCount);
+                            [self.tableView reloadData];
+                        }
+                        counter++;
                     });
                 }];
                 
             }
             
-            [self.tableView reloadData];
-            
         });
     }];
-    
 }
 
 #pragma mark - Table view data source
@@ -74,9 +81,10 @@
     QuestionsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     NSString *currentValue = [self.questions objectAtIndex:[indexPath row]];
+    NSString *currentUpvotes = [self.questionsAnswerCount objectAtIndex:[indexPath row]];
     
     cell.questionLabel.text = currentValue;
-    cell.questionCountLabel.text = @"11";
+    cell.questionCountLabel.text = currentUpvotes;
     
     return cell;
 }

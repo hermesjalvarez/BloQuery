@@ -11,7 +11,9 @@
 @interface AnswersTableViewCell : UITableViewCell
 
 @property (nonatomic, weak) id <AnswersTableViewCellDelegate> delegate;
+
 @property(nonatomic,strong) IBOutlet UILabel *answerLabel;
+
 @property(nonatomic,strong) IBOutlet UILabel *answerLikeCountLabel;
 
 @end

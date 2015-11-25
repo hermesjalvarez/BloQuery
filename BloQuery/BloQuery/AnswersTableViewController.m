@@ -11,7 +11,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
+    
     [self dataPull];
     
 }
@@ -33,24 +33,29 @@
     AnswersTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     NSString *currentAnswersValue = [self.answers objectAtIndex:[indexPath row]];
-    NSString *currentAnswersUpvotesValue = [self.answersUpvotes objectAtIndex:[indexPath row]];
+    NSNumber *currentAnswersUpvotesValue = [self.answersUpvotes objectAtIndex:[indexPath row]];
     
     cell.answerLabel.text = currentAnswersValue;
     cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@",currentAnswersUpvotesValue];
     
     //create upvote button
-    UIButton *newButton = [[UIButton alloc ] initWithFrame:CGRectMake(300, 0, 50, 25)];
-    newButton.titleLabel.font = [UIFont systemFontOfSize:12];
-    [newButton setTitleColor:[UIColor colorWithRed:36/255.0 green:71/255.0 blue:113/255.0 alpha:1.0] forState:UIControlStateNormal];
-    [newButton setTitle:@"Upvote" forState:UIControlStateNormal];
+    UIButton *newButton = (UIButton *)[cell viewWithTag:102];
     newButton.tag = indexPath.row;
-    [newButton addTarget:self action:@selector(buttonPressed:) forControlEvents:UIControlEventTouchUpInside];
-    [cell.contentView addSubview:newButton];
+    [newButton addTarget:self action:@selector(upvoteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
     
     return cell;
 }
 
--(void) buttonPressed:(id) sender{
+- (IBAction)upvoteButtonPressed:(id)sender {
+    
+//    static NSString *identifier = @"Cell";
+//    CGPoint buttonPosition = [sender convertPoint:CGPointZero
+//                                           toView:self.tableView];
+//    NSIndexPath *indexPath = [self.tableView indexPathForRowAtPoint:buttonPosition];
+//    AnswersTableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+//    NSNumber *currentAnswersUpvotesValue = [self.answersUpvotes objectAtIndex:[indexPath row]];
+//    NSLog(@"current value:%@",currentAnswersUpvotesValue);
+    
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"objectId" equalTo:[self.answersID objectAtIndex:[sender tag]]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -65,10 +70,6 @@
         
         dispatch_async(dispatch_get_main_queue(), ^{
             
-            for (NSString *i in upvotersQuery) {
-                NSLog(@"first:%@",i);
-            }
-            
             PFUser *currentUser = [PFUser currentUser];
             
             BOOL didUpvoterVoteAlready = [upvotersQuery containsObject:currentUser.username];
@@ -76,32 +77,28 @@
             
             if (didUpvoterVoteAlready) {
                 
+                //update database
                 PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-                
                 [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
                     answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] - 1];
                     [answers removeObject:currentUser.username forKey:@"upvoters"];
                     [answers saveInBackground];
-                    
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self dataPull];
                     });
-                    
                 }];
                 
             } else {
                 
+                //update database
                 PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-                
                 [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
                     answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] + 1];
                     [answers addObject:currentUser.username forKey:@"upvoters"];
                     [answers saveInBackground];
-                    
                     dispatch_async(dispatch_get_main_queue(), ^{
                         [self dataPull];
                     });
-                    
                 }];
                 
             }
@@ -109,7 +106,6 @@
         });
         
     }];
-    
 }
 
 - (IBAction)AnswerQuestion:(id)sender {
