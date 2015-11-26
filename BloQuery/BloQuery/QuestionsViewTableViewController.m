@@ -56,7 +56,11 @@
     NSString *currentAnswers = [[self.questionsAnswerCount objectAtIndex:[indexPath row]] stringValue];
     
     cell.questionLabel.text = currentValue;
-    cell.questionCountLabel.text = currentAnswers;
+    if ([currentAnswers isEqual:@"1"]) {
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answer",currentAnswers];
+    } else {
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answers",currentAnswers];
+    }
     
     return cell;
 }

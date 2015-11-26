@@ -54,8 +54,6 @@
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 if (!self.answerQuery.count) { //NEW ANSWER
-                    NSLog(@"question with new answer");
-                    
                     //--
                     PFObject *Answer = [PFObject objectWithClassName:@"Answer"];
                     Answer[@"answer"] = answer;
@@ -95,9 +93,7 @@
                     }];
                     //--
                     
-                } else { //EXISTING ANSWER
-                    NSLog(@"question with existing answers");
-                    
+                } else { //EXISTING ANSWER                    
                     //--
                     PFObject *Answer = [PFObject objectWithClassName:@"Answer"];
                     Answer[@"answer"] = answer;

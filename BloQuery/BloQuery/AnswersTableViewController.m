@@ -12,7 +12,28 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    [self dataPull];
+    self.answers = [[NSMutableArray alloc] init];
+    self.answersID = [[NSMutableArray alloc] init];
+    self.answersUpvotes = [[NSMutableArray alloc] init];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
+    [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (!error) {
+            for (PFObject *object in objects) {
+                [self.answers addObject:object[@"answer"]];
+                [self.answersID addObject:object.objectId];
+                [self.answersUpvotes addObject:object[@"upvotes"]];
+            }
+            
+        } else {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self.tableView reloadData];
+        });
+    }];
     
 }
 
@@ -32,11 +53,18 @@
     
     AnswersTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
+    [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; //prevent cell click, only button can be clicked
+    
     NSString *currentAnswersValue = [self.answers objectAtIndex:[indexPath row]];
-    NSNumber *currentAnswersUpvotesValue = [self.answersUpvotes objectAtIndex:[indexPath row]];
+    NSString *currentAnswersUpvotesValue = [NSString stringWithFormat:@"%@",[self.answersUpvotes objectAtIndex:[indexPath row]]];
     
     cell.answerLabel.text = currentAnswersValue;
-    cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@",currentAnswersUpvotesValue];
+    if ([currentAnswersUpvotesValue isEqual:@"1"]) {
+        cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ vote",currentAnswersUpvotesValue];
+    } else {
+        cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ votes",currentAnswersUpvotesValue];
+
+    }
     
     //create upvote button
     UIButton *newButton = (UIButton *)[cell viewWithTag:102];
@@ -47,6 +75,10 @@
 }
 
 - (IBAction)upvoteButtonPressed:(id)sender {
+    
+    //I want to be able to update the upvote button label instantly like what happens when you exit view and re-enter it
+    //right now the upvote button sometimes changes the label and sometimes doesn't
+    //the code below is the issue
     
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"objectId" equalTo:[self.answersID objectAtIndex:[sender tag]]];
@@ -65,7 +97,6 @@
             PFUser *currentUser = [PFUser currentUser];
             
             BOOL didUpvoterVoteAlready = [upvotersQuery containsObject:currentUser.username];
-            NSLog(@"Bool:%d",(int)didUpvoterVoteAlready);
             
             if (didUpvoterVoteAlready) {
                 
@@ -76,7 +107,8 @@
                     [answers removeObject:currentUser.username forKey:@"upvoters"];
                     [answers saveInBackground];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self dataPull];
+                        //update UI
+                        [self refreshUpvoteLabel];
                     });
                 }];
                 
@@ -89,7 +121,8 @@
                     [answers addObject:currentUser.username forKey:@"upvoters"];
                     [answers saveInBackground];
                     dispatch_async(dispatch_get_main_queue(), ^{
-                        [self dataPull];
+                        //update UI
+                        [self refreshUpvoteLabel];
                     });
                 }];
                 
@@ -112,10 +145,8 @@
     }
 }
 
-- (void) dataPull {
+- (void) refreshUpvoteLabel {
     
-    self.answers = [[NSMutableArray alloc] init];
-    self.answersID = [[NSMutableArray alloc] init];
     self.answersUpvotes = [[NSMutableArray alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
@@ -123,8 +154,6 @@
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (!error) {
             for (PFObject *object in objects) {
-                [self.answers addObject:object[@"answer"]];
-                [self.answersID addObject:object.objectId];
                 [self.answersUpvotes addObject:object[@"upvotes"]];
             }
             
