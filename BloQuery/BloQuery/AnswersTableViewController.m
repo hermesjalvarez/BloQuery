@@ -4,7 +4,6 @@
 #import "AnswersTableViewCell.h"
 
 @interface AnswersTableViewController ()
-
 @end
 
 @implementation AnswersTableViewController
@@ -19,22 +18,19 @@
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *object in objects) {
-                [self.answers addObject:object[@"answer"]];
-                [self.answersID addObject:object.objectId];
-                [self.answersUpvotes addObject:object[@"upvotes"]];
-            }
-            
-        } else {
+        if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        for (PFObject *object in objects) {
+            [self.answers addObject:object[@"answer"]];
+            [self.answersID addObject:object.objectId];
+            [self.answersUpvotes addObject:object[@"upvotes"]];
+        }
+        
+        [self.tableView reloadData];
     }];
-    
 }
 
 #pragma mark - Table view data source
@@ -76,59 +72,57 @@
 
 - (IBAction)upvoteButtonPressed:(id)sender {
     
-    //I want to be able to update the upvote button label instantly like what happens when you exit view and re-enter it
-    //right now the upvote button sometimes changes the label and sometimes doesn't
-    //the code below is the issue
-    
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"objectId" equalTo:[self.answersID objectAtIndex:[sender tag]]];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        NSMutableArray *upvotesQuery = [[NSMutableArray alloc] init];
-        NSArray *upvotersQuery;
-        if (!error) {
-            for (PFObject *object in objects) {
-                [upvotesQuery addObject:object[@"upvotes"]];
-                upvotersQuery = object[@"upvoters"];
-            }
+        if (error) {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
+        NSMutableArray *upvotesQuery = [[NSMutableArray alloc] init];
+        NSArray *upvotersQuery;
+        
+        for (PFObject *object in objects) {
+            [upvotesQuery addObject:object[@"upvotes"]];
+            upvotersQuery = object[@"upvoters"];
+        }
+        
+        PFUser *currentUser = [PFUser currentUser];
+        BOOL didUpvoterVoteAlready = [upvotersQuery containsObject:currentUser.username];
             
-            PFUser *currentUser = [PFUser currentUser];
-            
-            BOOL didUpvoterVoteAlready = [upvotersQuery containsObject:currentUser.username];
-            
-            if (didUpvoterVoteAlready) {
-                
-                //update database
-                PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-                [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
-                    answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] - 1];
-                    [answers removeObject:currentUser.username forKey:@"upvoters"];
-                    [answers saveInBackground];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        //update UI
-                        [self refreshUpvoteLabel];
-                    });
+        if (didUpvoterVoteAlready) {
+            //update database
+            PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
+            [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
+                answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] - 1];
+                [answers removeObject:currentUser.username forKey:@"upvoters"];
+                [answers saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (error) {
+                        NSLog(@"Error: %@ %@", error, [error userInfo]);
+                        return;
+                    }
+                    //update UI
+                    [self refreshUpvoteLabel];
                 }];
-                
-            } else {
-                
-                //update database
-                PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-                [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
-                    answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] + 1];
-                    [answers addObject:currentUser.username forKey:@"upvoters"];
-                    [answers saveInBackground];
-                    dispatch_async(dispatch_get_main_queue(), ^{
-                        //update UI
-                        [self refreshUpvoteLabel];
-                    });
+            }];
+        
+        } else {
+            //update database
+            PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
+            [query getObjectInBackgroundWithId:[self.answersID objectAtIndex:[sender tag]] block:^(PFObject *answers, NSError *error) {
+                answers[@"upvotes"] = [NSNumber numberWithInt:[upvotesQuery[0] intValue] + 1];
+                [answers addObject:currentUser.username forKey:@"upvoters"];
+                [answers saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
+                    if (error) {
+                        NSLog(@"Error: %@ %@", error, [error userInfo]);
+                        return;
+                    }
+                    //update UI
+                    [self refreshUpvoteLabel];
                 }];
-                
-            }
-            
-        });
+            }];
+        }
         
     }];
 }
@@ -146,26 +140,22 @@
 }
 
 - (void) refreshUpvoteLabel {
-    
     self.answersUpvotes = [[NSMutableArray alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (!error) {
-            for (PFObject *object in objects) {
-                [self.answersUpvotes addObject:object[@"upvotes"]];
-            }
-            
-        } else {
+        if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        for (PFObject *object in objects) {
+            [self.answersUpvotes addObject:object[@"upvotes"]];
+        }
+        
+        [self.tableView reloadData];
     }];
-    
 }
 
 @end

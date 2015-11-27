@@ -9,8 +9,7 @@
 
 @implementation QuestionsViewTableViewController
 
-- (void)viewDidLoad
-{
+- (void)viewDidLoad {
     [super viewDidLoad];
     
     self.questions = [[NSMutableArray alloc] init];
@@ -19,21 +18,18 @@
     
     PFQuery *query = [PFQuery queryWithClassName:@"Question"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        
-        if (!error) {
-            for (PFObject *object in objects) {
-                [self.questions addObject:object[@"question"]];
-                [self.questionsID addObject:object.objectId];
-                [self.questionsAnswerCount addObject:object[@"answers"]];
-            }
-        
-        } else {
+        if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
         }
         
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [self.tableView reloadData];
-        });
+        for (PFObject *object in objects) {
+            [self.questions addObject:object[@"question"]];
+            [self.questionsID addObject:object.objectId];
+            [self.questionsAnswerCount addObject:object[@"answers"]];
+        }
+        
+        [self.tableView reloadData];
     }];
 }
 
