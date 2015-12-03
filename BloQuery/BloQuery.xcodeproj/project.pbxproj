@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A1615E4C1C07ED9B008952EC /* TopQuestionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */; };
 		A18142BF1BFD81DF003EDC5C /* QuestionsTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A18142BE1BFD81DF003EDC5C /* QuestionsTableViewCell.m */; };
 		A18142C21BFE98F8003EDC5C /* AnswersTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A18142C11BFE98F8003EDC5C /* AnswersTableViewCell.m */; };
 		A1A9AF721BFAA3E300961B99 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = A1A9AF711BFAA3E300961B99 /* main.m */; };
@@ -42,6 +43,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A1615E4A1C07ED9B008952EC /* TopQuestionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopQuestionTableViewCell.h; sourceTree = "<group>"; };
+		A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopQuestionTableViewCell.m; sourceTree = "<group>"; };
 		A18142BD1BFD81DF003EDC5C /* QuestionsTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QuestionsTableViewCell.h; sourceTree = "<group>"; };
 		A18142BE1BFD81DF003EDC5C /* QuestionsTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QuestionsTableViewCell.m; sourceTree = "<group>"; };
 		A18142C01BFE98F8003EDC5C /* AnswersTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AnswersTableViewCell.h; sourceTree = "<group>"; };
@@ -154,6 +157,8 @@
 				A1A9AFBB1BFBF8D100961B99 /* AnswersTableViewController.m */,
 				A18142C01BFE98F8003EDC5C /* AnswersTableViewCell.h */,
 				A18142C11BFE98F8003EDC5C /* AnswersTableViewCell.m */,
+				A1615E4A1C07ED9B008952EC /* TopQuestionTableViewCell.h */,
+				A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */,
 				A1A9AFBD1BFC070D00961B99 /* AnswerQuestionViewController.h */,
 				A1A9AFBE1BFC070D00961B99 /* AnswerQuestionViewController.m */,
 				A1A9AF701BFAA3E300961B99 /* Supporting Files */,
@@ -276,6 +281,7 @@
 				A1A9AF8F1BFAAD2700961B99 /* SignUpViewController.m in Sources */,
 				A1A9AF751BFAA3E300961B99 /* AppDelegate.m in Sources */,
 				A1A9AF891BFAA6CE00961B99 /* QuestionsViewTableViewController.m in Sources */,
+				A1615E4C1C07ED9B008952EC /* TopQuestionTableViewCell.m in Sources */,
 				A1A9AFB91BFAD09B00961B99 /* AskQuestionViewController.m in Sources */,
 				A1A9AF721BFAA3E300961B99 /* main.m in Sources */,
 				A1A9AFBC1BFBF8D100961B99 /* AnswersTableViewController.m in Sources */,
