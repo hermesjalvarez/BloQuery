@@ -4,7 +4,6 @@
 #import "AnswersTableViewCell.h"
 #import "TopQuestionTableViewCell.h"
 
-
 @interface AnswersTableViewController ()
 @end
 
@@ -13,34 +12,7 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.answers = [[NSMutableArray alloc] init];
-    self.answersID = [[NSMutableArray alloc] init];
-    self.answersUpvotes = [[NSMutableArray alloc] init];
-    self.upvotersArray = [[NSMutableArray alloc] init];
-    
-    //create empty space in first cell
-    [self.answers addObject:@""];
-    [self.answersID addObject:@""];
-    [self.answersUpvotes addObject:@""];
-    [self.upvotersArray addObject:@""];
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-    [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
-        if (error) {
-            NSLog(@"Error: %@ %@", error, [error userInfo]);
-            return;
-        }
-        
-        for (PFObject *object in objects) {
-            [self.answers addObject:object[@"answer"]];
-            [self.answersID addObject:object.objectId];
-            [self.answersUpvotes addObject:object[@"upvotes"]];
-            [self.upvotersArray addObject:object[@"upvoters"]];
-        }
-        
-        [self.tableView reloadData];
-    }];
+    [self loadTableviewData];
 }
 
 #pragma mark - Table view data source
@@ -82,9 +54,11 @@
             cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ votes",currentAnswersUpvotesValue];
         }
         
+        cell.answerLikeCountLabel.tag = 1234; //create tag for use in button click selector method
+
         //create upvote button
         cell.voteButton = (UIButton *)[cell viewWithTag:102];
-        cell.voteButton.tag = indexPath.row;
+        cell.voteButton.tag = [indexPath row];
         [cell.voteButton addTarget:self action:@selector(upvoteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
         
         //set button state
@@ -104,6 +78,9 @@
 }
 
 - (IBAction)upvoteButtonPressed:(id)sender {
+    
+    //find count label
+    UILabel *answerLikeCountButton = [[sender superview] viewWithTag:1234];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
     [query whereKey:@"objectId" equalTo:[self.answersID objectAtIndex:[sender tag]]];
@@ -125,7 +102,7 @@
         BOOL didUpvoterVoteAlready = [upvotersQuery containsObject:currentUser.username]; //check if user already upvoted
             
         if (didUpvoterVoteAlready) {
-            //update button
+            //update count button UI
             [sender setTitle:@"Upvote" forState:UIControlStateNormal];
             
             //update database
@@ -138,13 +115,19 @@
                         NSLog(@"Error: %@ %@", error, [error userInfo]);
                         return;
                     }
-                    //update label
-                    [self refreshUpvoteLabel];
+                    
+                    //update count label UI
+                    NSString *count = [[NSNumber numberWithInt:[upvotesQuery[0] intValue] - 1] stringValue];
+                    if ([count isEqual:@"1"]) {
+                        answerLikeCountButton.text = [NSString stringWithFormat:@"%@ vote",count];
+                    } else {
+                        answerLikeCountButton.text = [NSString stringWithFormat:@"%@ votes",count];
+                    }
                 }];
             }];
         
         } else {
-            //update button
+            //update count button UI
             [sender setTitle:@"Downvote" forState:UIControlStateNormal];
             
             //update database
@@ -157,8 +140,14 @@
                         NSLog(@"Error: %@ %@", error, [error userInfo]);
                         return;
                     }
-                    //update label
-                    [self refreshUpvoteLabel];
+                    
+                    //update count label UI
+                    NSString *count = [[NSNumber numberWithInt:[upvotesQuery[0] intValue] + 1] stringValue];
+                    if ([count isEqual:@"1"]) {
+                        answerLikeCountButton.text = [NSString stringWithFormat:@"%@ vote",count];
+                    } else {
+                        answerLikeCountButton.text = [NSString stringWithFormat:@"%@ votes",count];
+                    }
                 }];
             }];
         }
@@ -178,15 +167,20 @@
     }
 }
 
-- (void) refreshUpvoteLabel {
+- (void) loadTableviewData {
+    self.answers = [[NSMutableArray alloc] init];
+    self.answersID = [[NSMutableArray alloc] init];
     self.answersUpvotes = [[NSMutableArray alloc] init];
     self.upvotersArray = [[NSMutableArray alloc] init];
-
-    //create empty cell for top cell
+    
+    //create empty space in slot 0 of every array
+    [self.answers addObject:@""];
+    [self.answersID addObject:@""];
     [self.answersUpvotes addObject:@""];
     [self.upvotersArray addObject:@""];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
+    [query orderByDescending:@"upvotes"];
     [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
@@ -195,6 +189,8 @@
         }
         
         for (PFObject *object in objects) {
+            [self.answers addObject:object[@"answer"]];
+            [self.answersID addObject:object.objectId];
             [self.answersUpvotes addObject:object[@"upvotes"]];
             [self.upvotersArray addObject:object[@"upvoters"]];
         }
