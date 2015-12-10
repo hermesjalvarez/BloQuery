@@ -12,6 +12,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    self.title = [NSString stringWithFormat:@"%@ asks...", self.userWhoAskedQuestion];
+    
     [self loadTableviewData];
 }
 

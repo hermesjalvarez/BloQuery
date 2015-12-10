@@ -15,6 +15,7 @@
     self.questions = [[NSMutableArray alloc] init];
     self.questionsID = [[NSMutableArray alloc] init];
     self.questionsAnswerCount = [[NSMutableArray alloc] init];
+    self.userWhoAskedQuestion = [[NSMutableArray alloc] init];
     
     PFQuery *query = [PFQuery queryWithClassName:@"Question"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
@@ -27,6 +28,7 @@
             [self.questions addObject:object[@"question"]];
             [self.questionsID addObject:object.objectId];
             [self.questionsAnswerCount addObject:object[@"answers"]];
+            [self.userWhoAskedQuestion addObject:object[@"username"]];
         }
         
         [self.tableView reloadData];
@@ -49,13 +51,24 @@
     QuestionsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
     NSString *currentValue = [self.questions objectAtIndex:[indexPath row]];
-    NSString *currentAnswers = [[self.questionsAnswerCount objectAtIndex:[indexPath row]] stringValue];
+    int currentAnswers = [[self.questionsAnswerCount objectAtIndex:[indexPath row]] intValue];
     
     cell.questionLabel.text = currentValue;
-    if ([currentAnswers isEqual:@"1"]) {
-        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answer",currentAnswers];
+    if (currentAnswers==1) {
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%d answer",currentAnswers];
     } else {
-        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answers",currentAnswers];
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%d answers",currentAnswers];
+    }
+    
+    if (currentAnswers<5) {
+        cell.questionPopularitySlotOne.image = [UIImage imageNamed:@"bolt.png"];
+    } else if (currentAnswers>4 && currentAnswers<10) {
+        cell.questionPopularitySlotOne.image = [UIImage imageNamed:@"bolt.png"];
+        cell.questionPopularitySlotTwo.image = [UIImage imageNamed:@"bolt.png"];
+    } else {
+        cell.questionPopularitySlotOne.image = [UIImage imageNamed:@"bolt.png"];
+        cell.questionPopularitySlotTwo.image = [UIImage imageNamed:@"bolt.png"];
+        cell.questionPopularitySlotThree.image = [UIImage imageNamed:@"bolt.png"];
     }
     
     return cell;
@@ -66,10 +79,8 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
-- (IBAction)SignOut:(id)sender {
-    [PFUser logOut];
-    
-    [self performSegueWithIdentifier:@"showSignIn" sender:self];
+- (IBAction)Settings:(id)sender {
+    [self performSegueWithIdentifier:@"showSettings" sender:self];
 }
 
 - (IBAction)AskQuestion:(id)sender {
@@ -82,6 +93,7 @@
         AnswersTableViewController *destViewController = segue.destinationViewController;
         destViewController.questionAsked = [self.questions objectAtIndex:[indexPath row]];
         destViewController.questionAskedID = [self.questionsID objectAtIndex:[indexPath row]];
+        destViewController.userWhoAskedQuestion = [self.userWhoAskedQuestion objectAtIndex:[indexPath row]];
     }
 }
 

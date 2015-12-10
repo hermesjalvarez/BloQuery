@@ -120,6 +120,64 @@
             </objects>
             <point key="canvasLocation" x="1850" y="-591"/>
         </scene>
+        <!--My Settings-->
+        <scene sceneID="gsS-Zh-lck">
+            <objects>
+                <viewController title="My Settings" id="sxW-b4-kSI" customClass="SettingsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="UfV-ng-9GJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="b4A-79-oB6"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="yT0-mg-BGx">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bze-o2-tYU">
+                                <rect key="frame" x="90" y="113" width="189" height="21"/>
+                                <animations/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YWq-Ua-7Dh">
+                                <rect key="frame" x="106" y="142" width="170" height="170"/>
+                                <animations/>
+                            </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4rL-73-0qp">
+                                <rect key="frame" x="71" y="320" width="240" height="30"/>
+                                <animations/>
+                                <state key="normal" title="Change Image"/>
+                                <connections>
+                                    <action selector="showImageActions:" destination="sxW-b4-kSI" eventType="touchUpInside" id="IeF-Fr-o7K"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="My Settings" id="pge-vw-Qcz">
+                        <barButtonItem key="leftBarButtonItem" title="Sign Out" id="jX4-Qf-wdx">
+                            <connections>
+                                <action selector="SignOut:" destination="sxW-b4-kSI" id="7xN-fb-8Ss"/>
+                            </connections>
+                        </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" title="BloQuery" id="cHx-id-myl">
+                            <connections>
+                                <action selector="backToBlocquery:" destination="sxW-b4-kSI" id="7Qy-1J-uUV"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
+                    <connections>
+                        <outlet property="userPhoto" destination="YWq-Ua-7Dh" id="fl8-KQ-Ooh"/>
+                        <outlet property="username" destination="Bze-o2-tYU" id="Hvo-9R-fGC"/>
+                        <segue destination="k0k-lP-sbc" kind="show" identifier="showSignIn" animates="NO" id="DbV-1D-ilW"/>
+                        <segue destination="X4J-qb-cnC" kind="show" identifier="backToBloquery" animates="NO" id="F25-OM-Cue"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="DjP-ZE-SKn" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2616" y="-591"/>
+        </scene>
         <!--BloQuery-->
         <scene sceneID="oWD-8v-sqG">
             <objects>
@@ -151,6 +209,18 @@
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                             <nil key="highlightedColor"/>
                                         </label>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="swd-26-FX5">
+                                            <rect key="frame" x="121" y="34" width="21" height="21"/>
+                                            <animations/>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="9PE-7s-iZ3">
+                                            <rect key="frame" x="146" y="34" width="21" height="21"/>
+                                            <animations/>
+                                        </imageView>
+                                        <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KHQ-V3-RSI">
+                                            <rect key="frame" x="171" y="34" width="21" height="21"/>
+                                            <animations/>
+                                        </imageView>
                                     </subviews>
                                     <animations/>
                                 </tableViewCellContentView>
@@ -158,6 +228,9 @@
                                 <connections>
                                     <outlet property="questionCountLabel" destination="6ge-f8-YfE" id="h8J-gG-IaQ"/>
                                     <outlet property="questionLabel" destination="JSX-u6-AtH" id="KYx-fD-MgN"/>
+                                    <outlet property="questionPopularitySlotOne" destination="swd-26-FX5" id="pvp-dW-xdX"/>
+                                    <outlet property="questionPopularitySlotThree" destination="KHQ-V3-RSI" id="5lo-Vh-2rY"/>
+                                    <outlet property="questionPopularitySlotTwo" destination="9PE-7s-iZ3" id="1fC-og-4N6"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -167,9 +240,9 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="BloQuery" id="g1O-Oe-aYZ">
-                        <barButtonItem key="leftBarButtonItem" title="Sign Out" id="HIX-7z-pBG">
+                        <barButtonItem key="leftBarButtonItem" title="Settings" id="HIX-7z-pBG">
                             <connections>
-                                <action selector="SignOut:" destination="Y97-Ko-Hyp" id="Txc-O5-a8V"/>
+                                <action selector="Settings:" destination="Y97-Ko-Hyp" id="VGx-Oa-AIx"/>
                             </connections>
                         </barButtonItem>
                         <barButtonItem key="rightBarButtonItem" title="Ask" id="N5C-Cy-gmU">
@@ -180,16 +253,16 @@
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
-                        <segue destination="k0k-lP-sbc" kind="show" identifier="showSignIn" animates="NO" id="lTV-Ae-sEl"/>
                         <segue destination="ekY-Zx-xZa" kind="show" identifier="AskQuestion" animates="NO" id="ZEO-tR-Diy"/>
                         <segue destination="PM6-k2-lrZ" kind="show" identifier="showAnswers" animates="NO" id="fFf-Jj-stB"/>
+                        <segue destination="sxW-b4-kSI" kind="show" identifier="showSettings" animates="NO" id="dmj-ou-SnB"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="k7z-0p-1cu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1850" y="295"/>
         </scene>
-        <!--Answers-->
+        <!--Answers Table View Controller-->
         <scene sceneID="Ex6-Ka-fQw">
             <objects>
                 <tableViewController id="PM6-k2-lrZ" customClass="AnswersTableViewController" sceneMemberID="viewController">
@@ -237,7 +310,7 @@
                                             <nil key="highlightedColor"/>
                                         </label>
                                         <label opaque="NO" userInteractionEnabled="NO" tag="101" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fmg-kl-ZcR">
-                                            <rect key="frame" x="8" y="22" width="289" height="21"/>
+                                            <rect key="frame" x="8" y="22" width="139" height="21"/>
                                             <animations/>
                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption2"/>
                                             <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -266,7 +339,7 @@
                             <outlet property="delegate" destination="PM6-k2-lrZ" id="wyZ-Yp-zwX"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="Answers" id="LSh-4b-ifo">
+                    <navigationItem key="navigationItem" id="LSh-4b-ifo">
                         <barButtonItem key="leftBarButtonItem" title="BloQuery" id="oTf-cK-djJ">
                             <connections>
                                 <segue destination="X4J-qb-cnC" kind="show" animates="NO" id="HjI-lo-4IX"/>
@@ -395,8 +468,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="HjI-lo-4IX"/>
+        <segue reference="DbV-1D-ilW"/>
+        <segue reference="F25-OM-Cue"/>
         <segue reference="fFf-Jj-stB"/>
-        <segue reference="lTV-Ae-sEl"/>
     </inferredMetricsTieBreakers>
 </document>
