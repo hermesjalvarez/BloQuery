@@ -24,6 +24,8 @@
             return;
         }
         
+        NSLog(@"%@",objects);
+        
         for (PFObject *object in objects) {
             [self.questions addObject:object[@"question"]];
             [self.questionsID addObject:object.objectId];

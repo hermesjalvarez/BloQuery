@@ -3,17 +3,28 @@
 #import <Parse/Parse.h>
 #import "AnswersTableViewCell.h"
 #import "TopQuestionTableViewCell.h"
+#import "Answer.h"
+
 
 @interface AnswersTableViewController ()
+
+@property (nonatomic, strong) NSArray <Answer *> *pfanswers;
+
 @end
 
 @implementation AnswersTableViewController
+
+- (NSArray *)sortedAnswers {
+    
+    NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"upvotes" ascending:NO];
+    return [self.pfanswers sortedArrayUsingDescriptors:@[sd]];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
     
     self.title = [NSString stringWithFormat:@"%@ asks...", self.userWhoAskedQuestion];
-    
+
     [self loadTableviewData];
 }
 
@@ -24,7 +35,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.answers.count;
+    return self.pfanswers.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -44,35 +55,41 @@
         //create answers cells
         static NSString *identifier = @"Cell";
         AnswersTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
+        
+        Answer *a = self.sortedAnswers[indexPath.item];
     
-        NSString *currentAnswersValue = [self.answers objectAtIndex:[indexPath row]];
-        NSString *currentAnswersUpvotesValue = [NSString stringWithFormat:@"%@",[self.answersUpvotes objectAtIndex:[indexPath row]]];
+        cell.answerLabel.text = a.answer;
+        cell.answerLikeCountLabel.text = [a.upvotes stringValue];
         
-        cell.answerLabel.text = currentAnswersValue;
         
-        if ([currentAnswersUpvotesValue isEqual:@"1"]) {
-        cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ vote",currentAnswersUpvotesValue];
-        } else {
-            cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ votes",currentAnswersUpvotesValue];
-        }
-        
-        cell.answerLikeCountLabel.tag = 1234; //create tag for use in button click selector method
-
-        //create upvote button
-        cell.voteButton = (UIButton *)[cell viewWithTag:102];
-        cell.voteButton.tag = [indexPath row];
-        [cell.voteButton addTarget:self action:@selector(upvoteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
-        
-        //set button state
-        PFUser *currentUser = [PFUser currentUser];
-        NSArray *currentUpvotersArray = [NSArray arrayWithArray:[self.upvotersArray objectAtIndex:[indexPath row]]];
-        BOOL didUpvoterVoteAlready = [currentUpvotersArray containsObject:currentUser.username]; //check if user already upvoted
-        if (didUpvoterVoteAlready) {
-            [cell.voteButton setTitle: @"Downvote" forState: UIControlStateNormal];
-        } else {
-            [cell.voteButton setTitle: @"Upvote" forState: UIControlStateNormal];
-        }
-        
+//        NSString *currentAnswersValue = [self.answers objectAtIndex:[indexPath row]];
+//        NSString *currentAnswersUpvotesValue = [NSString stringWithFormat:@"%@",[self.answersUpvotes objectAtIndex:[indexPath row]]];
+//        
+//        cell.answerLabel.text = currentAnswersValue;
+//        
+//        if ([currentAnswersUpvotesValue isEqual:@"1"]) {
+//        cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ vote",currentAnswersUpvotesValue];
+//        } else {
+//            cell.answerLikeCountLabel.text = [NSString stringWithFormat: @"%@ votes",currentAnswersUpvotesValue];
+//        }
+//        
+//        cell.answerLikeCountLabel.tag = 1234; //create tag for use in button click selector method
+//
+//        //create upvote button
+//        cell.voteButton = (UIButton *)[cell viewWithTag:102];
+//        cell.voteButton.tag = [indexPath row];
+//        [cell.voteButton addTarget:self action:@selector(upvoteButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+//        
+//        //set button state
+//        PFUser *currentUser = [PFUser currentUser];
+//        NSArray *currentUpvotersArray = [NSArray arrayWithArray:[self.upvotersArray objectAtIndex:[indexPath row]]];
+//        BOOL didUpvoterVoteAlready = [currentUpvotersArray containsObject:currentUser.username]; //check if user already upvoted
+//        if (didUpvoterVoteAlready) {
+//            [cell.voteButton setTitle: @"Downvote" forState: UIControlStateNormal];
+//        } else {
+//            [cell.voteButton setTitle: @"Upvote" forState: UIControlStateNormal];
+//        }
+//        
         [cell setSelectionStyle:UITableViewCellSelectionStyleNone]; //prevent cell click, only button can be clicked
         
         return cell;
@@ -80,6 +97,30 @@
 }
 
 - (IBAction)upvoteButtonPressed:(id)sender {
+    
+    NSIndexPath *oldIndexPath = [NSIndexPath indexPathForRow:4 inSection:0];
+    
+    Answer *ans = self.sortedAnswers[4];
+    NSArray *upvoters = ans.upvoters;
+    
+    PFUser *currentUser = [PFUser currentUser];
+    BOOL hasvoted = [upvoters containsObject:currentUser.username];
+    
+    if (hasvoted) {
+        ans.upvotes = @([ans.upvotes integerValue]-1);
+        NSMutableArray *marr = [upvoters mutableCopy];
+        [marr removeObject:currentUser.username];
+        ans.upvoters = marr;
+    }
+//    [self.tableView reloadData];
+    [self.tableView beginUpdates];
+    
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForRow:[self.sortedAnswers indexOfObject:ans] inSection:0];
+    [self.tableView moveRowAtIndexPath:oldIndexPath toIndexPath:newIndexPath];
+    
+    [self.tableView endUpdates];
+    
+    
     
     //find count label
     UILabel *answerLikeCountButton = [[sender superview] viewWithTag:1234];
@@ -190,12 +231,16 @@
             return;
         }
         
-        for (PFObject *object in objects) {
-            [self.answers addObject:object[@"answer"]];
-            [self.answersID addObject:object.objectId];
-            [self.answersUpvotes addObject:object[@"upvotes"]];
-            [self.upvotersArray addObject:object[@"upvoters"]];
-        }
+        self.pfanswers = objects;
+        
+        self.answers = [objects valueForKeyPath:@"answer"];
+        
+//        for (PFObject *object in objects) {
+//            [self.answers addObject:object[@"answer"]];
+//            [self.answersID addObject:object.objectId];
+//            [self.answersUpvotes addObject:object[@"upvotes"]];
+//            [self.upvotersArray addObject:object[@"upvoters"]];
+//        }
         
         [self.tableView reloadData];
     }];
