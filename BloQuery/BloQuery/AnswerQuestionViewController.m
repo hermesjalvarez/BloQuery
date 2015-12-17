@@ -146,6 +146,8 @@
         AnswersTableViewController *destViewController = segue.destinationViewController;
         destViewController.questionAsked = self.questionAsked;
         destViewController.questionAskedID = self.questionAskedID;
+        destViewController.userWhoAskedQuestion = self.userWhoAskedQuestion;
+        destViewController.avatarForUserWhoAskedQuestion = self.avatarForUserWhoAskedQuestion;
     }
 }
 

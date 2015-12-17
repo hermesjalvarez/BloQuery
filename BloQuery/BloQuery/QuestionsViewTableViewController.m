@@ -71,6 +71,22 @@
         cell.questionPopularitySlotThree.image = [UIImage imageNamed:@"bolt.png"];
     }
     
+    cell.username.text = [NSString stringWithFormat:@"%@",[self.userWhoAskedQuestion objectAtIndex:[indexPath row]]];
+    
+    PFQuery *query = [PFQuery queryWithClassName:@"_User"];
+    [query whereKey:@"username" equalTo:[self.userWhoAskedQuestion objectAtIndex:[indexPath row]]];
+    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
+        }
+        
+        for (PFObject *object in objects) {
+            cell.avatar.image = [UIImage imageNamed:object[@"avatar"]];
+        }
+        
+    }];
+    
     return cell;
 }
 
