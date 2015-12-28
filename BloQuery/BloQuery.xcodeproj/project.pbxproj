@@ -47,6 +47,7 @@
 		A1BFC2011C1F831A00E77EB7 /* Sad.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BFC1FD1C1F831A00E77EB7 /* Sad.png */; };
 		A1BFC2021C1F831A00E77EB7 /* Amazing.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BFC1FE1C1F831A00E77EB7 /* Amazing.png */; };
 		A1BFC2031C1F831A00E77EB7 /* Happy.png in Resources */ = {isa = PBXBuildFile; fileRef = A1BFC1FF1C1F831A00E77EB7 /* Happy.png */; };
+		A1BFC2091C2370DB00E77EB7 /* Answer.m in Sources */ = {isa = PBXBuildFile; fileRef = A1BFC2081C2370DB00E77EB7 /* Answer.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -103,6 +104,8 @@
 		A1BFC1FD1C1F831A00E77EB7 /* Sad.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Sad.png; sourceTree = "<group>"; };
 		A1BFC1FE1C1F831A00E77EB7 /* Amazing.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Amazing.png; sourceTree = "<group>"; };
 		A1BFC1FF1C1F831A00E77EB7 /* Happy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Happy.png; sourceTree = "<group>"; };
+		A1BFC2071C2370DB00E77EB7 /* Answer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Answer.h; sourceTree = "<group>"; };
+		A1BFC2081C2370DB00E77EB7 /* Answer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Answer.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -191,6 +194,8 @@
 				A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */,
 				A1A9AFBD1BFC070D00961B99 /* AnswerQuestionViewController.h */,
 				A1A9AFBE1BFC070D00961B99 /* AnswerQuestionViewController.m */,
+				A1BFC2071C2370DB00E77EB7 /* Answer.h */,
+				A1BFC2081C2370DB00E77EB7 /* Answer.m */,
 				A1A9AF701BFAA3E300961B99 /* Supporting Files */,
 			);
 			path = BloQuery;
@@ -312,6 +317,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A1A9AFBF1BFC070D00961B99 /* AnswerQuestionViewController.m in Sources */,
+				A1BFC2091C2370DB00E77EB7 /* Answer.m in Sources */,
 				A1A9AF8C1BFAAD0700961B99 /* SignInViewController.m in Sources */,
 				A18142BF1BFD81DF003EDC5C /* QuestionsTableViewCell.m in Sources */,
 				A1615E571C193679008952EC /* SettingsViewController.m in Sources */,

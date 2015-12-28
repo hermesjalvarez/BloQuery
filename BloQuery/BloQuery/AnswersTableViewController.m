@@ -3,14 +3,34 @@
 #import <Parse/Parse.h>
 #import "AnswersTableViewCell.h"
 #import "TopQuestionTableViewCell.h"
+#import "Answer.h"
 
 @interface AnswersTableViewController ()
+
+@property (nonatomic, strong) NSArray <Answer *> *PFAnswers;
+
 @end
 
 @implementation AnswersTableViewController
 
+- (NSArray *)sortedAnswers {
+    NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"upvotes" ascending:NO];
+    return [self.PFAnswers sortedArrayUsingDescriptors:@[sd]];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
+    
+    //query for PFobject
+    PFQuery *query1 = [PFQuery queryWithClassName:@"Answer"];
+    [query1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+        if (error) {
+            NSLog(@"Error: %@ %@", error, [error userInfo]);
+            return;
+        }
+        
+        self.PFAnswers = objects;
+    }];
     
     self.title = [NSString stringWithFormat:@"%@ asks...", self.userWhoAskedQuestion];
     
@@ -39,7 +59,9 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.answers.count;
+    //return self.answers.count;
+    //return self.PFAnswers.count+1;
+    return self.PFAnswers.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -62,8 +84,11 @@
         static NSString *identifier = @"Cell";
         AnswersTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
     
-        NSString *currentAnswersValue = [self.answers objectAtIndex:[indexPath row]];
-        NSString *currentAnswersUpvotesValue = [NSString stringWithFormat:@"%@",[self.answersUpvotes objectAtIndex:[indexPath row]]];
+        //Answer *a = self.PFAnswers[indexPath.row-1];
+        Answer *a = self.PFAnswers[indexPath.row];
+        
+        NSString *currentAnswersValue = a.answer;
+        NSString *currentAnswersUpvotesValue = [NSString stringWithFormat:@"%@",a.upvotes];
         
         cell.answerLabel.text = currentAnswersValue;
         
