@@ -40,7 +40,7 @@
         newUser.username = username;
         newUser.password = password;
         newUser.email = email;
-        newUser[@"avatar"] = @"Happy.png";
+        newUser[@"avatarImage"] = @"Happy.png";
 
         [newUser signUpInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             

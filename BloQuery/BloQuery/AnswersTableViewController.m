@@ -3,8 +3,14 @@
 #import <Parse/Parse.h>
 #import "AnswersTableViewCell.h"
 #import "TopQuestionTableViewCell.h"
+#import "Answer.h"
+#import "User.h"
 
 @interface AnswersTableViewController ()
+
+@property (nonatomic, strong) NSArray <Answer *> *PFAnswers;
+@property (nonatomic, strong) NSArray <User *> *PFUsers;
+
 @end
 
 @implementation AnswersTableViewController
@@ -24,7 +30,7 @@
         }
         
         for (PFObject *object in objects) {
-            self.avatarForUserWhoAskedQuestion = object[@"avatar"];
+            self.avatarForUserWhoAskedQuestion = object[@"avatarImage"];
         }
         
         [self loadTableviewData];
@@ -40,6 +46,7 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     return self.answers.count;
+    //return self.PFAnswers.count + 1;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -218,22 +225,27 @@
     [self.answerers addObject:@""];
     //[self.answerersImage addObject:@""]; //not needed due to code below
     
-    
-    PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-    [query orderByDescending:@"upvotes"];
-    [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    //new query for PFobject
+    PFQuery *query1 = [PFQuery queryWithClassName:@"Answer"];
+    [query1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             return;
         }
         
-        for (PFObject *object in objects) {
-            [self.answers addObject:object[@"answer"]];
-            [self.answersID addObject:object.objectId];
-            [self.answersUpvotes addObject:object[@"upvotes"]];
-            [self.upvotersArray addObject:object[@"upvoters"]];
-            [self.answerers addObject:object[@"username"]];
+        self.PFAnswers = objects; //set PFObjects
+        self.PFAnswers = [self sortedAnswers]; //sort by descending upvotes
+        
+        for (Answer *PFAnswer in self.PFAnswers) {//cycles through PFAnswer object
+            
+            //find all answers & data for question tapped
+            if ([self.questionAskedID isEqualToString:PFAnswer.questionAskedID]) {
+                [self.answers addObject:PFAnswer.answer];
+                [self.answersID addObject:PFAnswer.objectId];
+                [self.answersUpvotes addObject:PFAnswer.upvotes];
+                [self.upvotersArray addObject:PFAnswer.upvoters];
+                [self.answerers addObject:PFAnswer.username];
+            }
         }
         
         //find images for answerers
@@ -244,13 +256,22 @@
                 return;
             }
             
+            self.PFUsers = things;
+            NSLog(@"%@",self.PFUsers);
+            
+            for (User *user in self.PFUsers) {
+                NSLog(@"%@",user.username);
+                NSLog(@"%@",user.email);
+                NSLog(@"%@",user.avatar);
+            }
+            
             NSMutableArray *keys = [NSMutableArray new];
             NSMutableArray *values = [NSMutableArray new];
             NSMutableDictionary *dictionary = [NSMutableDictionary new];
-
+            
             for (PFObject *thing in things) {
                 [keys addObject:thing[@"username"]];
-                [values addObject:thing[@"avatar"]];
+                [values addObject:thing[@"avatarImage"]];
             }
             
             for (int i = 0 ; i != keys.count ; i++) {
@@ -260,13 +281,19 @@
             for (NSString *answerer in self.answerers) {
                 [self.answerersImage addObject:[NSString stringWithFormat:@"%@",dictionary[answerer]]];
             }
-
+            
             //reload data
             [self.tableView reloadData];
             
         }];
         
     }];
+    
+}
+
+- (NSArray *)sortedAnswers {
+    NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"upvotes" ascending:NO];
+    return [self.PFAnswers sortedArrayUsingDescriptors:@[sd]];
 }
 
 @end

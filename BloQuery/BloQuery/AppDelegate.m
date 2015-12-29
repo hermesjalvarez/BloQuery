@@ -1,5 +1,7 @@
 #import "AppDelegate.h"
 #import <Parse/Parse.h>
+#import "Answer.h"
+#import "User.h"
 
 @interface AppDelegate ()
 

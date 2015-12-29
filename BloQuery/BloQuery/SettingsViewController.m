@@ -23,7 +23,7 @@
         
         for (PFObject *object in objects) {
             self.username.text = [NSString stringWithFormat:@"%@",object[@"username"]];
-            self.userPhoto.image = [UIImage imageNamed:object[@"avatar"]];
+            self.userPhoto.image = [UIImage imageNamed:object[@"avatarImage"]];
         }
         
     }];
@@ -84,7 +84,7 @@
     //update database
     PFQuery *query = [PFQuery queryWithClassName:@"_User"];
     [query getObjectInBackgroundWithId:currentUser.objectId block:^(PFObject *user, NSError *error) {
-        user[@"avatar"] = avatarName;
+        user[@"avatarImage"] = avatarName;
         [user saveInBackgroundWithBlock:^(BOOL succeeded, NSError * _Nullable error) {
             if (error) {
                 NSLog(@"Error: %@ %@", error, [error userInfo]);

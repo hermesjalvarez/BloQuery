@@ -82,7 +82,7 @@
         }
         
         for (PFObject *object in objects) {
-            cell.avatar.image = [UIImage imageNamed:object[@"avatar"]];
+            cell.avatar.image = [UIImage imageNamed:object[@"avatarImage"]];
         }
         
     }];
