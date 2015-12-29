@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A16159A31C32F1C100B73C7A /* Answer.m in Sources */ = {isa = PBXBuildFile; fileRef = A16159A21C32F1C100B73C7A /* Answer.m */; };
 		A1615E4C1C07ED9B008952EC /* TopQuestionTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */; };
 		A1615E4E1C19175B008952EC /* bolt.png in Resources */ = {isa = PBXBuildFile; fileRef = A1615E4D1C19175B008952EC /* bolt.png */; };
 		A1615E541C1931AA008952EC /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A1615E531C1931AA008952EC /* Main.storyboard */; };
@@ -50,6 +51,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		A16159A11C32F1C100B73C7A /* Answer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Answer.h; sourceTree = "<group>"; };
+		A16159A21C32F1C100B73C7A /* Answer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Answer.m; sourceTree = "<group>"; };
 		A1615E4A1C07ED9B008952EC /* TopQuestionTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TopQuestionTableViewCell.h; sourceTree = "<group>"; };
 		A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TopQuestionTableViewCell.m; sourceTree = "<group>"; };
 		A1615E4D1C19175B008952EC /* bolt.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = bolt.png; sourceTree = "<group>"; };
@@ -191,6 +194,8 @@
 				A1615E4B1C07ED9B008952EC /* TopQuestionTableViewCell.m */,
 				A1A9AFBD1BFC070D00961B99 /* AnswerQuestionViewController.h */,
 				A1A9AFBE1BFC070D00961B99 /* AnswerQuestionViewController.m */,
+				A16159A11C32F1C100B73C7A /* Answer.h */,
+				A16159A21C32F1C100B73C7A /* Answer.m */,
 				A1A9AF701BFAA3E300961B99 /* Supporting Files */,
 			);
 			path = BloQuery;
@@ -316,6 +321,7 @@
 				A18142BF1BFD81DF003EDC5C /* QuestionsTableViewCell.m in Sources */,
 				A1615E571C193679008952EC /* SettingsViewController.m in Sources */,
 				A18142C21BFE98F8003EDC5C /* AnswersTableViewCell.m in Sources */,
+				A16159A31C32F1C100B73C7A /* Answer.m in Sources */,
 				A1A9AF8F1BFAAD2700961B99 /* SignUpViewController.m in Sources */,
 				A1A9AF751BFAA3E300961B99 /* AppDelegate.m in Sources */,
 				A1A9AF891BFAA6CE00961B99 /* QuestionsViewTableViewController.m in Sources */,

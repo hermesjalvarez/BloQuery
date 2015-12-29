@@ -3,8 +3,12 @@
 #import <Parse/Parse.h>
 #import "AnswersTableViewCell.h"
 #import "TopQuestionTableViewCell.h"
+#import "Answer.h"
 
 @interface AnswersTableViewController ()
+
+@property (nonatomic, strong) NSArray <Answer *> *PFAnswers;
+
 @end
 
 @implementation AnswersTableViewController
@@ -219,21 +223,25 @@
     //[self.answerersImage addObject:@""]; //not needed due to code below
     
     
-    PFQuery *query = [PFQuery queryWithClassName:@"Answer"];
-    [query orderByDescending:@"upvotes"];
-    [query whereKey:@"questionAskedID" equalTo:self.questionAskedID];
-    [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
+    PFQuery *query1 = [PFQuery queryWithClassName:@"Answer"];
+    [query1 findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
             return;
         }
         
-        for (PFObject *object in objects) {
-            [self.answers addObject:object[@"answer"]];
-            [self.answersID addObject:object.objectId];
-            [self.answersUpvotes addObject:object[@"upvotes"]];
-            [self.upvotersArray addObject:object[@"upvoters"]];
-            [self.answerers addObject:object[@"username"]];
+        self.PFAnswers = objects; //set PFObjects
+        self.PFAnswers = [self sortedAnswers]; //sort by descending upvotes
+        
+        for (Answer *PFAnswer in self.PFAnswers) {//cycles through PFAnswer object
+            //find all answers & data for question tapped
+            if ([self.questionAskedID isEqualToString:PFAnswer.questionAskedID]) {
+                [self.answers addObject:PFAnswer.answer];
+                [self.answersID addObject:PFAnswer.objectId];
+                [self.answersUpvotes addObject:PFAnswer.upvotes];
+                [self.upvotersArray addObject:PFAnswer.upvoters];
+                [self.answerers addObject:PFAnswer.username];
+            }
         }
         
         //find images for answerers
@@ -267,6 +275,11 @@
         }];
         
     }];
+}
+
+- (NSArray *)sortedAnswers {
+    NSSortDescriptor *sd = [NSSortDescriptor sortDescriptorWithKey:@"upvotes" ascending:NO];
+    return [self.PFAnswers sortedArrayUsingDescriptors:@[sd]];
 }
 
 @end
