@@ -7,7 +7,7 @@
 
 @interface QuestionsViewTableViewController ()
 
-@property (nonatomic, strong) NSArray <Question *> *PFQuestions;
+@property (nonatomic, strong) NSArray <Question *> *questions;
 
 @end
 
@@ -16,11 +16,6 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    self.questions = [[NSMutableArray alloc] init];
-    self.questionsID = [[NSMutableArray alloc] init];
-    self.questionsAnswerCount = [[NSMutableArray alloc] init];
-    self.userWhoAskedQuestion = [[NSMutableArray alloc] init];
-    
     PFQuery *query = [PFQuery queryWithClassName:@"Question"];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
@@ -28,14 +23,7 @@
             return;
         }
         
-        self.PFQuestions = objects;
-        
-        for (Question *PFQuestion in self.PFQuestions) {
-            [self.questions addObject:PFQuestion.question];
-            [self.questionsID addObject:PFQuestion.objectId];
-            [self.questionsAnswerCount addObject:PFQuestion.answers];
-            [self.userWhoAskedQuestion addObject:PFQuestion.username];
-        }
+        self.questions = objects;
         
         [self.tableView reloadData];
     }];
@@ -52,18 +40,19 @@
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
-    static NSString *identifier = @"Cell";
-    
+
+	NSString *identifier = [QuestionsTableViewCell reuseIdentifier];
     QuestionsTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:identifier forIndexPath:indexPath];
-    
-    NSString *currentValue = [self.questions objectAtIndex:[indexPath row]];
-    int currentAnswers = [[self.questionsAnswerCount objectAtIndex:[indexPath row]] intValue];
+
+	Question *q = self.questions[indexPath.row];
+	NSString *currentValue = q.question;
+    NSInteger currentAnswers = [q.answers integerValue];
     
     cell.questionLabel.text = currentValue;
     if (currentAnswers==1) {
-        cell.questionCountLabel.text = [NSString stringWithFormat:@"%d answer",currentAnswers];
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answer", @(currentAnswers)];
     } else {
-        cell.questionCountLabel.text = [NSString stringWithFormat:@"%d answers",currentAnswers];
+        cell.questionCountLabel.text = [NSString stringWithFormat:@"%@ answers", @(currentAnswers)];
     }
     
     if (currentAnswers<5) {
@@ -77,10 +66,14 @@
         cell.questionPopularitySlotThree.image = [UIImage imageNamed:@"bolt.png"];
     }
     
-    cell.username.text = [NSString stringWithFormat:@"%@",[self.userWhoAskedQuestion objectAtIndex:[indexPath row]]];
-    
+    cell.username.text = [NSString stringWithFormat:@"%@", q.username];
+
+	/**
+	 *	reading this like this is very inefficient. lots of possible ways I can think of to optimize
+	 *	best to discuss the options, as most would require a deeper knowledge of Parse backend than I currently have
+	 */
     PFQuery *query = [PFQuery queryWithClassName:@"_User"];
-    [query whereKey:@"username" equalTo:[self.userWhoAskedQuestion objectAtIndex:[indexPath row]]];
+    [query whereKey:@"username" equalTo:q.username];
     [query findObjectsInBackgroundWithBlock:^(NSArray *objects, NSError *error) {
         if (error) {
             NSLog(@"Error: %@ %@", error, [error userInfo]);
@@ -112,10 +105,10 @@
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
     if ([[segue identifier] isEqualToString:@"showAnswers"]) {
         NSIndexPath *indexPath = (NSIndexPath *)sender;
+		Question *q = self.questions[indexPath.row];
+
         AnswersTableViewController *destViewController = segue.destinationViewController;
-        destViewController.questionAsked = [self.questions objectAtIndex:[indexPath row]];
-        destViewController.questionAskedID = [self.questionsID objectAtIndex:[indexPath row]];
-        destViewController.userWhoAskedQuestion = [self.userWhoAskedQuestion objectAtIndex:[indexPath row]];
+        destViewController.qst = q;
     }
 }
 

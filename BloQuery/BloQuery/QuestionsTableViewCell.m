@@ -2,6 +2,10 @@
 
 @implementation QuestionsTableViewCell
 
++ (NSString *)reuseIdentifier {
+	return [NSStringFromClass([self class]) uppercaseString];
+}
+
 - (void)awakeFromNib {
     // Initialization code
 }
