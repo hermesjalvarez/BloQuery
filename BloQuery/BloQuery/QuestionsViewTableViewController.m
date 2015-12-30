@@ -2,8 +2,12 @@
 #import <Parse/Parse.h>
 #import "AnswersTableViewController.h"
 #import "QuestionsTableViewCell.h"
+#import "Question.h"
+
 
 @interface QuestionsViewTableViewController ()
+
+@property (nonatomic, strong) NSArray <Question *> *PFQuestions;
 
 @end
 
@@ -24,11 +28,13 @@
             return;
         }
         
-        for (PFObject *object in objects) {
-            [self.questions addObject:object[@"question"]];
-            [self.questionsID addObject:object.objectId];
-            [self.questionsAnswerCount addObject:object[@"answers"]];
-            [self.userWhoAskedQuestion addObject:object[@"username"]];
+        self.PFQuestions = objects;
+        
+        for (Question *PFQuestion in self.PFQuestions) {
+            [self.questions addObject:PFQuestion.question];
+            [self.questionsID addObject:PFQuestion.objectId];
+            [self.questionsAnswerCount addObject:PFQuestion.answers];
+            [self.userWhoAskedQuestion addObject:PFQuestion.username];
         }
         
         [self.tableView reloadData];

@@ -507,8 +507,8 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
+        <segue reference="NN0-TQ-eu9"/>
         <segue reference="fFf-Jj-stB"/>
-        <segue reference="HjI-lo-4IX"/>
         <segue reference="DbV-1D-ilW"/>
     </inferredMetricsTieBreakers>
 </document>
