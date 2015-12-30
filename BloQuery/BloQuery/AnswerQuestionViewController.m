@@ -142,13 +142,15 @@
 }
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender {
-    if ([[segue identifier] isEqualToString:@"backtoAnswersTableView"]) {
-        AnswersTableViewController *destViewController = segue.destinationViewController;
-        destViewController.questionAsked = self.questionAsked;
-        destViewController.questionAskedID = self.questionAskedID;
-        destViewController.userWhoAskedQuestion = self.userWhoAskedQuestion;
-        destViewController.avatarForUserWhoAskedQuestion = self.avatarForUserWhoAskedQuestion;
-    }
+	return;
+
+//    if ([[segue identifier] isEqualToString:@"backtoAnswersTableView"]) {
+//        AnswersTableViewController *destViewController = segue.destinationViewController;
+//        destViewController.questionAsked = self.questionAsked;
+//        destViewController.questionAskedID = self.questionAskedID;
+//        destViewController.userWhoAskedQuestion = self.userWhoAskedQuestion;
+//        destViewController.avatarForUserWhoAskedQuestion = self.avatarForUserWhoAskedQuestion;
+//    }
 }
 
 @end

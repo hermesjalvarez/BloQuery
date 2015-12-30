@@ -2,6 +2,8 @@
 
 @interface QuestionsTableViewCell : UITableViewCell
 
++ (NSString *)reuseIdentifier;
+
 @property (weak, nonatomic) IBOutlet UILabel *username;
 @property(nonatomic,strong) IBOutlet UILabel *questionLabel;
 @property(nonatomic,strong) IBOutlet UILabel *questionCountLabel;
